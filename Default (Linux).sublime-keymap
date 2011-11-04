@@ -1,0 +1,5 @@
+[
+  { "keys": ["ctrl+alt+c", "ctrl+alt+s"], "command": "convert_to_snake"},
+  { "keys": ["ctrl+alt+c", "ctrl+alt+c"], "command": "convert_to_camel"},
+  { "keys": ["ctrl+alt+c", "ctrl+alt+p"], "command": "convert_to_pascal"}
+]
