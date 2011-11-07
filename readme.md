@@ -12,7 +12,7 @@ Clone this repository in to the Sublime Text 2 "Packages" directory, which is lo
 "Preferences" -> "Browse Packages" option in sublime takes you.
 
 #### Package Control
-Add https://github.com/jdc0589/CaseConversion as a Package Control repository. JsFormat will show up in the
+Add https://github.com/jdc0589/CaseConversion as a Package Control repository. CaseConversion will show up in the
 package install list.
 
 ## Contributors
