@@ -20,4 +20,4 @@ package install list.
 - Scott Bessler
 
 ## License
-Do whatever you want with this.
+Do whatever you want with this. Give credit where credit is due.
