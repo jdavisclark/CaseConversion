@@ -1,0 +1,17 @@
+[  
+{  
+    "id": "edit",  
+    "children":  
+    [  
+    {
+        "id": "convert_case",  
+        "children":
+        [
+            { "command": "convert_to_snake", "caption": "Snake Case" },
+            { "command": "convert_to_camel", "caption": "Camel Case" }, 
+            { "command": "convert_to_pascal", "caption": "Pascal Case" }
+        ]
+    }
+    ]  
+}  
+] 
