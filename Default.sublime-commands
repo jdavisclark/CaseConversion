@@ -1,0 +1,14 @@
+[
+	{
+	    "caption": "Convert Case: PascalCase",
+	    "command": "convert_to_pascal"
+	},
+	{
+	    "caption": "Convert Case: camelCase",
+	    "command": "convert_to_camel"
+	},
+	{
+	    "caption": "Convert Case: snake_case",
+	    "command": "convert_to_snake"
+	}
+]
