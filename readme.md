@@ -18,6 +18,7 @@ package install list.
 ## Contributors
 - Davis Clark
 - Scott Bessler
+- Curtis Gibby
 
 ## License
 Copyright (C) 2012 Davis Clark
