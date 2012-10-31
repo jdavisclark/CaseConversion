@@ -10,5 +10,9 @@
 	{
 	    "caption": "Convert Case: snake_case",
 	    "command": "convert_to_snake"
+	},
+	{
+	    "caption": "Convert Case: dot.case",
+	    "command": "convert_to_dot"
 	}
 ]
