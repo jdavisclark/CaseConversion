@@ -1,5 +1,5 @@
 # Case Conversion
-Case conversion is a plugin for Sublime Text 2. It converts the current word/token between pascal, camel, and snake case.
+Case conversion is a plugin for Sublime Text 2. It converts the current word/token between pascal, camel, snake and dot case.
 
 ## Keybindings
 - To snake_case:  "ctrl+alt+c", "ctrl+alt+s"  

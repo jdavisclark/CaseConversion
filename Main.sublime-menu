@@ -9,7 +9,8 @@
         [
             { "command": "convert_to_snake", "caption": "snake_case" },
             { "command": "convert_to_camel", "caption": "camelCase" }, 
-            { "command": "convert_to_pascal", "caption": "PascalCase" }
+            { "command": "convert_to_pascal", "caption": "PascalCase" },
+            { "command": "convert_to_dot", "caption": "dot.case" }
         ]
     }
     ]  

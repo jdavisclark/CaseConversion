@@ -39,6 +39,11 @@ def to_camel_case(text):
     return text[0].lower() + text[1:]
 
 
+def to_dot_case(text):
+    text = to_snake_case(text)
+    return re.sub("_", ".", text)
+
+
 def run_on_selections(view, edit, func):
     for s in view.sel():
         region = view.word(s)
@@ -59,3 +64,8 @@ class ConvertToCamel(sublime_plugin.TextCommand):
 class ConvertToPascal(sublime_plugin.TextCommand):
     def run(self, edit):
         run_on_selections(self.view, edit, to_pascal_case)
+
+
+class ConvertToDot(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_dot_case)
