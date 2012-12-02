@@ -14,5 +14,13 @@
 	{
 	    "caption": "Convert Case: dot.case",
 	    "command": "convert_to_dot"
+	},
+	{
+	    "caption": "Convert Case: dash-case",
+	    "command": "convert_to_dash"
+	},
+	{
+	    "caption": "Convert Case: separate␣words",
+	    "command": "convert_to_separate_words"
 	}
 ]

@@ -31,6 +31,14 @@ def to_dot_case(text):
     return text.replace("_", ".")
 
 
+def to_dash_case(text):
+    return text.replace("_", "-")
+
+
+def to_separate_words(text):
+    return text.replace("_", " ")
+
+
 def run_on_selections(view, edit, func):
     for s in view.sel():
         region = s if s else view.word(s)
@@ -57,3 +65,13 @@ class ConvertToPascal(sublime_plugin.TextCommand):
 class ConvertToDot(sublime_plugin.TextCommand):
     def run(self, edit):
         run_on_selections(self.view, edit, to_dot_case)
+
+
+class ConvertToDash(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_dash_case)
+
+
+class ConvertToSeparateWords(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_separate_words)
