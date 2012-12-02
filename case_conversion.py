@@ -46,7 +46,7 @@ def to_dot_case(text):
 
 def run_on_selections(view, edit, func):
     for s in view.sel():
-        region = view.word(s)
+        region = s if s else view.word(s)
         text = strip_wrapping_underscores(view.substr(region))
         view.replace(edit, region, func(text))
 
