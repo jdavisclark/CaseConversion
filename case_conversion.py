@@ -3,35 +3,23 @@ import re
 
 
 def to_snake_case(text):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', text)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    text = re.sub('[-. _]+', '_', text)
+    if text.isupper():
+        # Entirely uppercase; assume case is insignificant.
+        return text.lower()
+    return re.sub('(?<=[^_])([A-Z])', r'_\1', text).lower()
 
 
 def strip_wrapping_underscores(text):
     return re.sub("^(_*)(.*?)(_*)$", r'\2', text)
 
 
-def get_indexes(text, char):
-    indexlist = []
-    last = 0
-    while last != -1:
-        pos = text.find(char, last)
-        if pos == -1:
-            break
-        else:
-            indexlist.append(pos)
-            last = pos + 1
-    return indexlist
-
-
 def to_pascal_case(text):
-    if "_" in text:
-        callback = lambda pat: pat.group(1).lower() + pat.group(2).upper()
-        text = re.sub("(\w)_(\w)", callback, text)
-        if text[0].islower():
-            text = text[0].upper() + text[1:]
-        return text
-    return text[0].upper() + text[1:]
+    callback = lambda pat: pat.group(1).upper()
+    text = re.sub("_(\w)", callback, text)
+    if text[0].islower():
+        text = text[0].upper() + text[1:]
+    return text
 
 
 def to_camel_case(text):
@@ -40,20 +28,28 @@ def to_camel_case(text):
 
 
 def to_dot_case(text):
-    text = to_snake_case(text)
-    return re.sub("_", ".", text)
+    return text.replace("_", ".")
+
+
+def to_dash_case(text):
+    return text.replace("_", "-")
+
+
+def to_separate_words(text):
+    return text.replace("_", " ")
 
 
 def run_on_selections(view, edit, func):
     for s in view.sel():
-        region = view.word(s)
-        text = strip_wrapping_underscores(view.substr(region))
+        region = s if s else view.word(s)
+        text = to_snake_case(view.substr(region))
+        text = strip_wrapping_underscores(text)
         view.replace(edit, region, func(text))
 
 
 class ConvertToSnakeCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        run_on_selections(self.view, edit, to_snake_case)
+        run_on_selections(self.view, edit, lambda text: text)
 
 
 class ConvertToCamel(sublime_plugin.TextCommand):
@@ -69,3 +65,13 @@ class ConvertToPascal(sublime_plugin.TextCommand):
 class ConvertToDot(sublime_plugin.TextCommand):
     def run(self, edit):
         run_on_selections(self.view, edit, to_dot_case)
+
+
+class ConvertToDash(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_dash_case)
+
+
+class ConvertToSeparateWords(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_separate_words)
