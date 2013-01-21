@@ -22,5 +22,9 @@
 	{
 	    "caption": "Convert Case: separate␣words",
 	    "command": "convert_to_separate_words"
+	},
+	{
+	    "caption": "Convert Case: Toggle Case",
+	    "command": "toggle_snake_camel_pascal"
 	}
 ]
