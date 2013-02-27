@@ -9,6 +9,12 @@ def to_snake_case(text):
         return text.lower()
     return re.sub('(?<=[^_])([A-Z])', r'_\1', text).lower()
 
+def to_snake_case_graceful(text):
+    text = re.sub('[-. _]+', '_', text)
+    if text.isupper():
+        # Entirely uppercase; assume case is insignificant.
+        return text;
+    return re.sub('(?<=[^_])([A-Z])', r'_\1', text)
 
 def strip_wrapping_underscores(text):
     return re.sub("^(_*)(.*?)(_*)$", r'\2', text)
@@ -35,14 +41,21 @@ def to_dash_case(text):
     return text.replace("_", "-")
 
 
+def to_slash(text):
+    return text.replace("_", "/")
+
+
 def to_separate_words(text):
     return text.replace("_", " ")
 
 
-def run_on_selections(view, edit, func):
+def run_on_selections(view, edit, func, no_lower=False):
     for s in view.sel():
         region = s if s else view.word(s)
-        text = to_snake_case(view.substr(region))
+        if no_lower:
+            text = to_snake_case_graceful(view.substr(region))
+        else:
+            text = to_snake_case(view.substr(region))
         text = strip_wrapping_underscores(text)
         view.replace(edit, region, func(text))
 
@@ -75,3 +88,8 @@ class ConvertToDash(sublime_plugin.TextCommand):
 class ConvertToSeparateWords(sublime_plugin.TextCommand):
     def run(self, edit):
         run_on_selections(self.view, edit, to_separate_words)
+
+
+class ConvertToSlash(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_slash, True )
