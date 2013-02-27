@@ -9,6 +9,7 @@ camel, snake, dot, dash (hyphen) cases, and separated words.
 - to dot.case: "ctrl+alt+c", "ctrl+alt+d"
 - to dash-case: "ctrl+alt+c", "ctrl+alt+h"
 - to separate words: "ctrl+alt+c", "ctrl+alt+w"
+- to seperate with slashes: "ctrl+alt+c", "ctrl+alt+/"
 
 ## Install
 #### Git Clone
