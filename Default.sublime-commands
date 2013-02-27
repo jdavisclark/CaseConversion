@@ -22,5 +22,9 @@
 	{
 	    "caption": "Convert Case: separate␣words",
 	    "command": "convert_to_separate_words"
+	},
+	{
+	    "caption": "Convert Case: separate/with/slash",
+	    "command": "convert_to_slash"
 	}
 ]
