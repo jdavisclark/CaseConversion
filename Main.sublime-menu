@@ -12,7 +12,8 @@
             { "command": "convert_to_pascal", "caption": "PascalCase" },
             { "command": "convert_to_dot", "caption": "dot.case" },
             { "command": "convert_to_dash", "caption": "dash-case" },
-            { "command": "convert_to_separate_words", "caption": "separate␣words" }
+            { "command": "convert_to_separate_words", "caption": "separate␣words" },
+            { "command": "convert_to_slash", "caption": "separate/with/slash" }
         ]
     }
     ]  
