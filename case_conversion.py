@@ -49,6 +49,20 @@ def to_separate_words(text):
     return text.replace("_", " ")
 
 
+def toggle_case(word):
+    pascalcase = re.search('^[A-Z][a-z]+(?:[A-Z][a-z]+)*$', word)
+    snakecase = re.search('^[a-z]+(?:_[a-z]+)*$', word)
+    camelcase = re.search('^[a-z]+(?:[A-Z][a-z]+)*$', word)
+    if (pascalcase):
+        return to_snake_case(word)
+    elif (snakecase):
+        return to_camel_case(word)
+    elif (camelcase):
+        return to_pascal_case(word)
+    else:
+        return word
+
+
 def run_on_selections(view, edit, func, no_lower=False):
     for s in view.sel():
         region = s if s else view.word(s)
@@ -58,6 +72,19 @@ def run_on_selections(view, edit, func, no_lower=False):
             text = to_snake_case(view.substr(region))
         text = strip_wrapping_underscores(text)
         view.replace(edit, region, func(text))
+
+
+def run_on_selections_togglecase(view, edit, func):
+    for s in view.sel():
+        region = s if s else view.word(s)
+        text = view.substr(region)
+        text = strip_wrapping_underscores(text)
+        view.replace(edit, region, func(text))
+
+
+class ToggleSnakeCamelPascalCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections_togglecase(self.view, edit, toggle_case)
 
 
 class ConvertToSnakeCommand(sublime_plugin.TextCommand):
