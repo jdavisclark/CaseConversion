@@ -93,7 +93,8 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
                 else:
                     print("Case Conversion: acronym '%s' was discarded for being invalid" % a)
 
-            # Check a run of words represented by the range [s, i].
+            # Check a run of words represented by the range [s, i]. Should
+            # return last index of new word groups.
             def checkAcronym(s, i):
                 # Combine each letter into single string.
                 acstr = ''.join(words[s:i])
@@ -145,6 +146,8 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
                 for j in xrange(len(rangeList)):
                     r = rangeList[j]
                     words.insert(s+j, acstr[r[0]:r[1]])
+
+                return s+len(rangeList)-1
         else:
             # Fallback to simple acronym detection.
             def checkAcronym(s, i):
@@ -157,29 +160,27 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
                 # Replace them with new word grouping.
                 words.insert(s,''.join(acronym))
 
+                return s
+
 
         # Index of current word.
         i = 0
         # Index of first letter in run.
-        s = False
-        # Previous word.
-        p = False
+        s = None
 
         # Find runs of single uppercase letters.
         while i < len(words):
             word = words[i]
             if upper.match(word):
-                if not s: s = i
-                p = i
-            elif p:
-                checkAcronym(s, i)
-                i = s + 1
-                s = False
-                p = False
+                if s == None: s = i
+            elif s != None:
+                i = checkAcronym(s, i) + 1
+                s = None
 
             i += 1
 
-        if p: checkAcronym(s, i)
+        if s != None:
+            checkAcronym(s, i)
 
     # Determine case type.
     caseType = 'unknown'
