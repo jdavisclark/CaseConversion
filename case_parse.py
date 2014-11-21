@@ -2,9 +2,7 @@ import re
 import sys
 
 PYTHON = sys.version_info[0]
-if 3 == PYTHON:
-    xrange = range
-    unicode = str
+if 3 == PYTHON: xrange = range
 
 
 """
@@ -200,7 +198,7 @@ def parseVariable(var, useAcronyms=True, acronyms=[], preserveCase=False):
 
     if preserveCase:
         if wasUpper:
-            words = list(map(unicode.upper, words))
+            words = [w.upper() for w in words]
     else:
         # Normalize case of each word to PascalCase. From there, other cases
         # can be worked out easily.
