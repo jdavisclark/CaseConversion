@@ -1,4 +1,8 @@
+import sublime
 import re
+
+SETTINGS_FILE = "CaseConversion.sublime-settings"
+
 
 """
 Parses a variable into a list of words.
@@ -15,10 +19,9 @@ Also returns the case type, which can be one of the following:
 Also returns the first separator character, or False if there isn't one.
 """
 def parseVariable(var, preserveCase=False):
-    useAcronyms = True
-
-    acronyms = ['URL','GUI','UI','ID']
-    acronyms = map(str.upper,acronyms)
+    settings = sublime.load_settings(SETTINGS_FILE)
+    useAcronyms = settings.get("use_acronyms", True)
+    acronyms = map(unicode.upper, settings.get("acronyms", []))
 
     # TODO: include unicode characters
     lower  = re.compile('^[a-z0-9]$')
@@ -174,7 +177,7 @@ def parseVariable(var, preserveCase=False):
 
     if preserveCase:
         if wasUpper:
-            words = map(str.upper, words)
+            words = map(unicode.upper, words)
     else:
         # Normalize case of each word
         for i in xrange(len(words)):
