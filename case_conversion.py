@@ -75,7 +75,7 @@ class ToggleSnakeCamelPascalCommand(sublime_plugin.TextCommand):
 
 class ConvertToSnakeCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        run_on_selections(self.view, edit, lambda text: text)
+        run_on_selections(self.view, edit, to_snake_case)
 
 
 class ConvertToCamel(sublime_plugin.TextCommand):
