@@ -90,11 +90,11 @@ def parseVariable(var, useAcronyms=True, acronyms=[], preserveCase=False):
             else:
                 print("Case Conversion: acronym '%s' was discarded for being invalid" % a)
 
-        # Check a run of words represented by the range [st[1], st[0]].
-        def checkAcronym(st):
+        # Check a run of words represented by the range [s, i].
+        def checkAcronym(s, i):
             # Combine each letter into single string.
             acstr = ''
-            for j in xrange(st[1], st[0]):
+            for j in xrange(s, i):
                 acstr += words[j]
 
             # List of ranges representing found acronyms.
@@ -138,39 +138,36 @@ def parseVariable(var, useAcronyms=True, acronyms=[], preserveCase=False):
             rangeList.sort()
 
             # Remove original letters in word list.
-            for j in xrange(st[1], st[0]):
-                del words[st[1]]
+            for j in xrange(s, i):
+                del words[s]
 
             # Replace them with new word grouping.
             for j in xrange(len(rangeList)):
                 r = rangeList[j]
-                words.insert(st[1]+j, acstr[r[0]:r[1]])
+                words.insert(s+j, acstr[r[0]:r[1]])
 
-            st[0] = st[1] + 1
-            st[1] = False
-            st[2] = False
-
-        st = [
-            # Index of current word.
-            0,
-            # Index of first letter in run.
-            False,
-            # Previous word.
-            False,
-        ]
+        # Index of current word.
+        i = 0
+        # Index of first letter in run.
+        s = False
+        # Previous word.
+        p = False
 
         # Find runs of single uppercase letters.
-        while st[0] < len(words):
-            word = words[st[0]]
+        while i < len(words):
+            word = words[i]
             if upper.match(word):
-                if not st[1]: st[1] = st[0]
-                st[2] = st[0]
-            elif st[2]:
-                checkAcronym(st)
+                if not s: s = i
+                p = i
+            elif p:
+                checkAcronym(s, i)
+                i = s + 1
+                s = False
+                p = False
 
-            st[0] += 1
+            i += 1
 
-        if st[2]: checkAcronym(st)
+        if p: checkAcronym(s, i)
 
     # Determine case type.
     caseType = 'unknown'
