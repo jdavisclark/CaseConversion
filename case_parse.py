@@ -28,7 +28,7 @@ def parseVariable(var, preserveCase=False):
     useAcronyms = settings.get("use_acronyms", True)
     acronyms = list(map(unicode.upper, settings.get("acronyms", [])))
 
-    # TODO: include unicode characters
+    # TODO: include unicode characters.
     lower  = re.compile('^[a-z0-9]$')
     upper  = re.compile('^[A-Z]$')
     sep    = re.compile('^[^a-zA-Z0-9]$')
@@ -37,12 +37,12 @@ def parseVariable(var, preserveCase=False):
     words = []
     hasSep = False
 
-    # Index of current character. Initially 1 because we don't want to iterate
-    # over 0th element
+    # Index of current character. Initially 1 because we don't want to check
+    # if the 0th character is a boundary.
     i = 1
     # Index of first character in a sequence
     s = 0
-    # Previous character
+    # Previous character.
     p = var[0:1]
 
     # Treat an all-caps variable as lower-case, so that every letter isn't
@@ -52,25 +52,30 @@ def parseVariable(var, preserveCase=False):
         var = var.lower()
         wasUpper = True
 
+    # Iterate over each character, checking for boundaries, or places where
+    # the variable should divided.
     while i <= len(var):
         c = var[i:i+1]
 
         split = False
         if i < len(var):
-            # Detect upper-case letter as boundary
+            # Detect upper-case letter as boundary.
             if upper.match(c):
                 split = True
-            # Detect transition from separator to not separator
+            # Detect transition from separator to not separator.
             elif notsep.match(c) and sep.match(p):
                 split = True
-            # Detect transition not separator to separator
+            # Detect transition not separator to separator.
             elif sep.match(c) and notsep.match(p):
                 split = True
         else:
+            # The loop goes one extra iteration so that it can handle the
+            # remaining text after the last boundary.
             split = True
 
         if split:
             if notsep.match(p):
+                # Words only; do not include separators.
                 words.append(var[s:i])
             else:
                 # Variable contains at least one separator
@@ -81,21 +86,25 @@ def parseVariable(var, preserveCase=False):
         p = c
 
     if useAcronyms:
-        # Check a run of words represented by the range [st[1], st[0]]
+        # Check a run of words represented by the range [st[1], st[0]].
         def checkAcronym(st):
-            # Combine each letter into single string
+            # Combine each letter into single string.
             acstr = ''
             for j in xrange(st[1], st[0]):
                 acstr += words[j]
 
-            # List of ranges representing found acronyms
+            # List of ranges representing found acronyms.
             rangeList = []
-            # Set of remaining letters
+            # Set of remaining letters.
             notRange = set(range(len(acstr)))
 
-            # Search for each acronym in acstr
+            # Search for each acronym in acstr.
             for acronym in acronyms:
+                #TODO: Sanitize acronyms to include only letters.
                 rac = re.compile(acronym)
+
+                # Loop so that all instances of the acronym are found, instead
+                # of just the first.
                 n = 0
                 while True:
                     m = rac.search(acstr, n)
@@ -104,7 +113,7 @@ def parseVariable(var, preserveCase=False):
                     a, b = m.start(), m.end()
                     n = b
 
-                    # Make sure found acronym doesn't overlap with others
+                    # Make sure found acronym doesn't overlap with others.
                     ok = True
                     for r in rangeList:
                         if a < r[1] and b > r[0]:
@@ -116,18 +125,19 @@ def parseVariable(var, preserveCase=False):
                         for j in xrange(a, b):
                             notRange.remove(j)
 
-            # Add remaining letters
+            # Add remaining letters as ranges.
             for nr in notRange:
                 rangeList.append((nr, nr+1))
 
-            # No ranges will overlap, so it's safe to sort by lower bound
+            # No ranges will overlap, so it's safe to sort by lower bound,
+            # which sort() will do by default.
             rangeList.sort()
 
-            # Remove original letters in word list
+            # Remove original letters in word list.
             for j in xrange(st[1], st[0]):
                 del words[st[1]]
 
-            # Replace them with new word grouping
+            # Replace them with new word grouping.
             for j in xrange(len(rangeList)):
                 r = rangeList[j]
                 words.insert(st[1]+j, acstr[r[0]:r[1]])
@@ -137,15 +147,15 @@ def parseVariable(var, preserveCase=False):
             st[2] = False
 
         st = [
-            # Index of current word
+            # Index of current word.
             0,
-            # Index of first letter in run
+            # Index of first letter in run.
             False,
-            # Previous word
+            # Previous word.
             False,
         ]
 
-        # Find runs of single uppercase letters
+        # Find runs of single uppercase letters.
         while st[0] < len(words):
             word = words[st[0]]
             if upper.match(word):
@@ -155,9 +165,10 @@ def parseVariable(var, preserveCase=False):
                 checkAcronym(st)
 
             st[0] += 1
+
         if st[2]: checkAcronym(st)
 
-    # Determine case type
+    # Determine case type.
     caseType = 'unknown'
     if wasUpper:
         caseType = 'upper'
@@ -184,11 +195,12 @@ def parseVariable(var, preserveCase=False):
         if wasUpper:
             words = list(map(unicode.upper, words))
     else:
-        # Normalize case of each word
+        # Normalize case of each word to PascalCase. From there, other cases
+        # can be worked out easily.
         for i in xrange(len(words)):
             if useAcronyms and words[i].upper() in acronyms:
                 words[i] = words[i].upper()
             else:
                 words[i] = words[i].capitalize()
 
-    return words,caseType,hasSep
+    return words, caseType, hasSep
