@@ -179,11 +179,12 @@ def parseVariable(var, preserveCase=False):
         camelCase = words[0].islower()
         pascalCase = words[0].istitle() or words[0].isupper()
 
-        for word in words[1:]:
-            c = word.istitle() or word.isupper()
-            camelCase &= c
-            pascalCase &= c
-            if not c: break
+        if camelCase or pascalCase:
+            for word in words[1:]:
+                c = word.istitle() or word.isupper()
+                camelCase &= c
+                pascalCase &= c
+                if not c: break
 
         if camelCase:
             caseType = 'camel'
