@@ -60,7 +60,7 @@ def toggle_case(text):
         return text
 
 
-def run_on_selections(view, edit, func, no_lower=False):
+def run_on_selections(view, edit, func):
     for s in view.sel():
         region = s if s else view.word(s)
 
@@ -105,4 +105,4 @@ class ConvertToSeparateWords(sublime_plugin.TextCommand):
 
 class ConvertToSlash(sublime_plugin.TextCommand):
     def run(self, edit):
-        run_on_selections(self.view, edit, to_slash, True )
+        run_on_selections(self.view, edit, to_slash )
