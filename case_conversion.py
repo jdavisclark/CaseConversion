@@ -33,13 +33,13 @@ def to_camel_case(text, detectAcronyms, acronyms):
 
 
 def to_dot_case(text, detectAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
-    return '.'.join(words)
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+    return '.'.join([w.lower() for w in words])
 
 
 def to_dash_case(text, detectAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
-    return '-'.join(words)
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+    return '-'.join([w.lower() for w in words])
 
 
 def to_slash(text, detectAcronyms, acronyms):
@@ -48,8 +48,8 @@ def to_slash(text, detectAcronyms, acronyms):
 
 
 def to_separate_words(text, detectAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
-    return ' '.join(words)
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+    return ' '.join([w.lower() for w in words])
 
 
 def toggle_case(text, detectAcronyms, acronyms):
