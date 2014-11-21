@@ -16,58 +16,62 @@ else:
 SETTINGS_FILE = "CaseConversion.sublime-settings"
 
 
-def to_snake_case(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms)
+def to_snake_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
     return '_'.join([w.lower() for w in words])
 
 
-def to_pascal_case(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms)
+def to_pascal_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
     return ''.join(words)
 
 
-def to_camel_case(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms)
+def to_camel_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
     words[0] = words[0].lower()
     return ''.join(words)
 
 
-def to_dot_case(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms, True)
+def to_dot_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
     return '.'.join(words)
 
 
-def to_dash_case(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms, True)
+def to_dash_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
     return '-'.join(words)
 
 
-def to_slash(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms, True)
+def to_slash(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
     return '/'.join(words)
 
 
-def to_separate_words(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms, True)
+def to_separate_words(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
     return ' '.join(words)
 
 
-def toggle_case(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms)
+def toggle_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
     if case == 'pascal' and not sep:
-        return to_snake_case(text, useAcronyms, acronyms)
+        return to_snake_case(text, detectAcronyms, acronyms)
     elif case == 'lower' and sep == '_':
-        return to_camel_case(text, useAcronyms, acronyms)
+        return to_camel_case(text, detectAcronyms, acronyms)
     elif case == 'camel' and not sep:
-        return to_pascal_case(text, useAcronyms, acronyms)
+        return to_pascal_case(text, detectAcronyms, acronyms)
     else:
         return text
 
 
 def run_on_selections(view, edit, func):
     settings = sublime.load_settings(SETTINGS_FILE)
-    useAcronyms = settings.get("use_acronyms", True)
-    acronyms = settings.get("acronyms", [])
+    detectAcronyms = settings.get("detect_acronyms", True)
+    useList = settings.get("use_acronyms_list", True)
+    if useList:
+        acronyms = settings.get("acronyms", [])
+    else:
+        acronyms = False
 
     for s in view.sel():
         region = s if s else view.word(s)
@@ -76,7 +80,7 @@ def run_on_selections(view, edit, func):
         # Preserve leading and trailing whitespace
         leading = text[:len(text)-len(text.lstrip())]
         trailing = text[len(text.rstrip()):]
-        text = func(text.strip(), useAcronyms, acronyms)
+        text = func(text.strip(), detectAcronyms, acronyms)
         view.replace(edit, region, leading + text + trailing)
 
 
