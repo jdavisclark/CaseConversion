@@ -72,8 +72,12 @@ def run_on_selections(view, edit, func):
     for s in view.sel():
         region = s if s else view.word(s)
 
-        # TODO: preserve leading and trailing whitespace
-        view.replace(edit, region, func(view.substr(region), useAcronyms, acronyms))
+        text = view.substr(region)
+        # Preserve leading and trailing whitespace
+        leading = text[:len(text)-len(text.lstrip())]
+        trailing = text[len(text.rstrip()):]
+        text = func(text.strip(), useAcronyms, acronyms)
+        view.replace(edit, region, leading + text + trailing)
 
 
 class ToggleSnakeCamelPascalCommand(sublime_plugin.TextCommand):
