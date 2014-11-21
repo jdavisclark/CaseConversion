@@ -73,11 +73,11 @@ def parseVariable(var, preserveCase=False):
         p = c
 
     if useAcronyms:
-        # Check a run of words represented by the range [st[1],st[0]]
+        # Check a run of words represented by the range [st[1], st[0]]
         def checkAcronym(st):
             # Combine each letter into single string
             acstr = ''
-            for j in xrange(st[1],st[0]):
+            for j in xrange(st[1], st[0]):
                 acstr += words[j]
 
             # List of ranges representing found acronyms
@@ -90,7 +90,7 @@ def parseVariable(var, preserveCase=False):
                 rac = re.compile(acronym)
                 n = 0
                 while True:
-                    m = rac.search(acstr,n)
+                    m = rac.search(acstr, n)
                     if not m: break
 
                     a, b = m.start(), m.end()
@@ -104,25 +104,25 @@ def parseVariable(var, preserveCase=False):
                             break
 
                     if ok:
-                        rangeList.append((a,b))
-                        for j in xrange(a,b):
+                        rangeList.append((a, b))
+                        for j in xrange(a, b):
                             notRange.remove(j)
 
             # Add remaining letters
             for nr in notRange:
-                rangeList.append((nr,nr+1))
+                rangeList.append((nr, nr+1))
 
             # No ranges will overlap, so it's safe to sort by lower bound
             rangeList.sort()
 
             # Remove original letters in word list
-            for j in xrange(st[1],st[0]):
+            for j in xrange(st[1], st[0]):
                 del words[st[1]]
 
             # Replace them with new word grouping
             for j in xrange(len(rangeList)):
                 r = rangeList[j]
-                words.insert(st[1]+j,acstr[r[0]:r[1]])
+                words.insert(st[1]+j, acstr[r[0]:r[1]])
 
             st[0] = st[1] + 1
             st[1] = False
@@ -174,7 +174,7 @@ def parseVariable(var, preserveCase=False):
 
     if preserveCase:
         if wasUpper:
-            words = map(str.upper,words)
+            words = map(str.upper, words)
     else:
         # Normalize case of each word
         for i in xrange(len(words)):
