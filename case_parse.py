@@ -81,6 +81,17 @@ def parseVariable(var, useAcronyms=True, acronyms=[], preserveCase=False):
         p = c
 
     if useAcronyms:
+        # Sanitize acronyms list by discarding invalid acronyms and
+        # normalizing valid ones to upper-case.
+        validacronym = re.compile('^[a-zA-Z0-9]+$')
+        unsafeacronyms = acronyms
+        acronyms = []
+        for a in unsafeacronyms:
+            if validacronym.match(a):
+                acronyms.append(a.upper())
+            else:
+                print("Case Conversion: acronym '%s' was discarded for being invalid" % a)
+
         # Check a run of words represented by the range [st[1], st[0]].
         def checkAcronym(st):
             # Combine each letter into single string.
