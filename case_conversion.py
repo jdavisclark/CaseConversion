@@ -7,6 +7,7 @@ PYTHON = sys.version_info[0]
 if 3 == PYTHON:
     # Python 3 and ST3
     from . import case_parse
+    unicode = str
 else:
     # Python 2 and ST2
     import case_parse

@@ -3,7 +3,9 @@ import re
 import sys
 
 PYTHON = sys.version_info[0]
-if 3 == PYTHON: xrange = range
+if 3 == PYTHON:
+    xrange = range
+    unicode = str
 
 
 SETTINGS_FILE = "CaseConversion.sublime-settings"
