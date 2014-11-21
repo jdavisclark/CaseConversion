@@ -67,12 +67,18 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
 
         if split:
             if notsep.match(p):
-                # Words only; do not include separators.
                 words.append(var[s:i])
             else:
                 # Variable contains at least one separator.
                 # Use the first one as the variable's primary separator.
                 if not hasSep: hasSep = var[s:s+1]
+
+                # Use None to indicate a separator in the word list.
+                words.append(None)
+                # If separators weren't included in the list, then breaks
+                # between upper-case sequences ("AAA_BBB") would be
+                # disregarded; the letter-run detector would count them as one
+                # sequence ("AAABBB").
             s = i
 
         i = i + 1
@@ -162,16 +168,17 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
 
                 return s
 
+        # Letter-run detector
 
         # Index of current word.
         i = 0
         # Index of first letter in run.
         s = None
 
-        # Find runs of single uppercase letters.
+        # Find runs of single upper-case letters.
         while i < len(words):
             word = words[i]
-            if upper.match(word):
+            if word != None and upper.match(word):
                 if s == None: s = i
             elif s != None:
                 i = checkAcronym(s, i) + 1
@@ -181,6 +188,10 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
 
         if s != None:
             checkAcronym(s, i)
+
+    # Separators are no longer needed, so they can be removed. They *should*
+    # be removed, since it's supposed to be a *word* list.
+    words = [w for w in words if w != None]
 
     # Determine case type.
     caseType = 'unknown'
