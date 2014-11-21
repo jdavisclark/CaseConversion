@@ -1,5 +1,10 @@
 import sublime
 import re
+import sys
+
+PYTHON = sys.version_info[0]
+if 3 == PYTHON: xrange = range
+
 
 SETTINGS_FILE = "CaseConversion.sublime-settings"
 
@@ -21,7 +26,7 @@ Also returns the first separator character, or False if there isn't one.
 def parseVariable(var, preserveCase=False):
     settings = sublime.load_settings(SETTINGS_FILE)
     useAcronyms = settings.get("use_acronyms", True)
-    acronyms = map(unicode.upper, settings.get("acronyms", []))
+    acronyms = list(map(unicode.upper, settings.get("acronyms", [])))
 
     # TODO: include unicode characters
     lower  = re.compile('^[a-z0-9]$')
@@ -177,7 +182,7 @@ def parseVariable(var, preserveCase=False):
 
     if preserveCase:
         if wasUpper:
-            words = map(unicode.upper, words)
+            words = list(map(unicode.upper, words))
     else:
         # Normalize case of each word
         for i in xrange(len(words)):
