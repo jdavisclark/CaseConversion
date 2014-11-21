@@ -48,7 +48,7 @@ def to_slash(text, useAcronyms, acronyms):
 
 
 def to_separate_words(text, useAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms)
+    words, case, sep = case_parse.parseVariable(text, useAcronyms, acronyms, True)
     return ' '.join(words)
 
 
