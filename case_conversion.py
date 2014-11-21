@@ -48,8 +48,8 @@ def to_slash(text, detectAcronyms, acronyms):
 
 
 def to_separate_words(text, detectAcronyms, acronyms):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
-    return ' '.join([w.lower() for w in words])
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
+    return ' '.join(words)
 
 
 def toggle_case(text, detectAcronyms, acronyms):
