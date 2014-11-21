@@ -78,8 +78,9 @@ def parseVariable(var, preserveCase=False):
                 # Words only; do not include separators.
                 words.append(var[s:i])
             else:
-                # Variable contains at least one separator
-                if not hasSep: hasSep = p
+                # Variable contains at least one separator.
+                # Use the first one as the variable's primary separator.
+                if not hasSep: hasSep = var[s:s+1]
             s = i
 
         i = i + 1
