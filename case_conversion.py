@@ -1,90 +1,76 @@
 import sublime_plugin
 import re
+import sys
+
+PYTHON = sys.version_info[0]
+
+if 3 == PYTHON:
+    # Python 3 and ST3
+    from . import case_parse
+else:
+    # Python 2 and ST2
+    import case_parse
 
 
 def to_snake_case(text):
-    text = re.sub('[-. _]+', '_', text)
-    if text.isupper():
-        # Entirely uppercase; assume case is insignificant.
-        return text.lower()
-    return re.sub('(?<=[^_])([A-Z])', r'_\1', text).lower()
-
-def to_snake_case_graceful(text):
-    text = re.sub('[-. _]+', '_', text)
-    if text.isupper():
-        # Entirely uppercase; assume case is insignificant.
-        return text;
-    return re.sub('(?<=[^_])([A-Z])', r'_\1', text)
-
-def strip_wrapping_underscores(text):
-    return re.sub("^(_*)(.*?)(_*)$", r'\2', text)
+    words, case, sep = case_parse.parseVariable(text)
+    return '_'.join(map(unicode.lower, words))
 
 
 def to_pascal_case(text):
-    callback = lambda pat: pat.group(1).upper()
-    text = re.sub("_(\w)", callback, text)
-    if text[0].islower():
-        text = text[0].upper() + text[1:]
-    return text
+    words, case, sep = case_parse.parseVariable(text)
+    return ''.join(words)
 
 
 def to_camel_case(text):
-    text = to_pascal_case(text)
-    return text[0].lower() + text[1:]
+    words, case, sep = case_parse.parseVariable(text)
+    words[0] = words[0].lower()
+    return ''.join(words)
 
 
 def to_dot_case(text):
-    return text.replace("_", ".")
+    words, case, sep = case_parse.parseVariable(text, True)
+    return '.'.join(words)
 
 
 def to_dash_case(text):
-    return text.replace("_", "-")
+    words, case, sep = case_parse.parseVariable(text, True)
+    return '-'.join(words)
 
 
 def to_slash(text):
-    return text.replace("_", "/")
+    words, case, sep = case_parse.parseVariable(text, True)
+    return '/'.join(words)
 
 
 def to_separate_words(text):
-    return text.replace("_", " ")
+    words, case, sep = case_parse.parseVariable(text)
+    return ' '.join(words)
 
 
-def toggle_case(word):
-    pascalcase = re.search('^[A-Z][a-z]+(?:[A-Z][a-z]+)*$', word)
-    snakecase = re.search('^[a-z]+(?:_[a-z]+)*$', word)
-    camelcase = re.search('^[a-z]+(?:[A-Z][a-z]+)*$', word)
-    if (pascalcase):
-        return to_snake_case(word)
-    elif (snakecase):
-        return to_camel_case(word)
-    elif (camelcase):
-        return to_pascal_case(word)
+def toggle_case(text):
+    words, case, sep = case_parse.parseVariable(text)
+    if case == 'pascal' and not sep:
+        return to_snake_case(text)
+    elif case == 'lower' and sep == '_':
+        return to_camel_case(text)
+    elif case == 'camel' and not sep:
+        return to_pascal_case(text)
     else:
-        return word
+        return text
 
 
 def run_on_selections(view, edit, func, no_lower=False):
     for s in view.sel():
         region = s if s else view.word(s)
-        if no_lower:
-            text = to_snake_case_graceful(view.substr(region))
-        else:
-            text = to_snake_case(view.substr(region))
-        text = strip_wrapping_underscores(text)
-        view.replace(edit, region, func(text))
 
-
-def run_on_selections_togglecase(view, edit, func):
-    for s in view.sel():
-        region = s if s else view.word(s)
-        text = view.substr(region)
-        text = strip_wrapping_underscores(text)
-        view.replace(edit, region, func(text))
+        # TODO: preserve leading and trailing whitespace
+        view.replace(edit, region, func(view.substr(region)))
 
 
 class ToggleSnakeCamelPascalCommand(sublime_plugin.TextCommand):
     def run(self, edit):
-        run_on_selections_togglecase(self.view, edit, toggle_case)
+        run_on_selections(self.view, edit, toggle_case)
 
 
 class ConvertToSnakeCommand(sublime_plugin.TextCommand):
