@@ -1,0 +1,66 @@
+{
+	// `detect_acronyms` will cause certain words in variable names to be
+	// marked as acronyms, making them upper-case ("URL") instead of
+	// capitalized ("Url").
+
+	// When variables are parsed, upper-case letters count as word boundaries.
+	// That means words which would be considered acronyms are instead
+	// separated into individual letters. For example, converting "BaseURL" to
+	// snake_case will produce "base_u_r_l".
+
+	// If `detect_acronyms` is enabled, runs of single upper-case characters
+	// will be combined into single words. How these are detected depends on
+	// the `use_acronyms_list` setting. In general, this means "BaseURL" would
+	// be converted into "base_url".
+
+	// If `detect_acronyms` is disabled, no attempts to combine upper-case
+	// characters will be made.
+	"detect_acronyms": true,
+
+
+	// `use_acronyms_list` causes a more robust way to detect acronyms to be
+	// used, by searching for words from a predefined list.
+
+	// If `use_acronyms_list` is disabled, then a basic detection method is
+	// used. That is, runs of upper-case letters are detected and combined
+	// into single words. There are two drawbacks to this. The first is that
+	// two supposed acronyms that are adjacent will be counted as one word
+	// (e.g. "GetHTTPURLPath" would be divided into [Get, HTTPURL, Path]).
+
+	// The second drawback is that acronyms converted to lower-case cannot be
+	// converted back to their original upper-case. For example, "BaseURL" to
+	// "base_url" to "BaseUrl".
+
+	// If `use_acronyms_list` is enabled, then each run of upper-case letters
+	// is compared with words in the `acronyms` list, and any matches are
+	// counted as words. This means adjacent acronyms will be detected (e.g.
+	// "GetHTTPURLPath" will be divided into [Get, HTTP, URL, Path]).
+
+	// Acronyms are also detected among words, so converting from lower-case
+	// will produce correctly upper-cased acronyms. For example, "BaseURL" to
+	// "base_url" to "BaseURL".
+	"use_acronyms_list": true,
+
+
+	// `acronyms` is a list of words that are to be considered acronyms.
+
+	// Valid acronyms contain only upper and lower-case letters, and digits.
+	// Invalid words are ignored, and valid words are converted to upper-case.
+
+	// Order matters; words earlier in the list will be selected before words
+	// later in the list. For example, if "UI" were to be put before "GUI",
+	// then "GUI" would never be selected, because the "UI" in "GUI" would
+	// always be selected first.
+
+	// Note that if the list is empty, no acronyms will be detected, so
+	// variables will be treated as if `detect_acronyms` was disabled.
+	"acronyms": [
+		"HTML",
+		"CSS",
+		"HTTP",
+		"URL",
+		"GUI",
+		"UI",
+		"ID"
+	]
+}
