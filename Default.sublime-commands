@@ -28,6 +28,10 @@
 	    "command": "convert_to_slash"
 	},
 	{
+	    "caption": "Convert Case: separate\\with\\backslash",
+	    "command": "convert_to_back_slash"
+	},
+	{
 	    "caption": "Convert Case: Toggle Case",
 	    "command": "toggle_snake_camel_pascal"
 

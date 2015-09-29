@@ -46,6 +46,10 @@ def to_slash(text, detectAcronyms, acronyms):
     words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
     return '/'.join(words)
 
+def to_backslash(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
+    return '\\'.join(words)
+
 
 def to_separate_words(text, detectAcronyms, acronyms):
     words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, True)
@@ -123,3 +127,7 @@ class ConvertToSeparateWords(sublime_plugin.TextCommand):
 class ConvertToSlash(sublime_plugin.TextCommand):
     def run(self, edit):
         run_on_selections(self.view, edit, to_slash )
+
+class ConvertToBackSlash(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_backslash )
