@@ -21,6 +21,11 @@ def to_snake_case(text, detectAcronyms, acronyms):
     return '_'.join([w.lower() for w in words])
 
 
+def to_screaming_snake_case(text, detectAcronyms, acronyms):
+    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+    return '_'.join([w.upper() for w in words])
+
+
 def to_pascal_case(text, detectAcronyms, acronyms):
     words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
     return ''.join(words)
@@ -97,6 +102,11 @@ class ToggleSnakeCamelPascalCommand(sublime_plugin.TextCommand):
 class ConvertToSnakeCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         run_on_selections(self.view, edit, to_snake_case)
+
+
+class ConvertToScreamingSnakeCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        run_on_selections(self.view, edit, to_screaming_snake_case)
 
 
 class ConvertToCamel(sublime_plugin.TextCommand):

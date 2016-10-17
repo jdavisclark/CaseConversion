@@ -12,6 +12,10 @@
 	    "command": "convert_to_snake"
 	},
 	{
+	    "caption": "Convert Case: SCREAMING_SNAKE_CASE",
+	    "command": "convert_to_screaming_snake"
+	},
+	{
 	    "caption": "Convert Case: dot.case",
 	    "command": "convert_to_dot"
 	},
