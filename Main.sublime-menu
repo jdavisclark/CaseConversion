@@ -52,7 +52,7 @@
                                     "default": "// Settings in here override those in \"Case Conversion/Default.sublime-settings\",\n\n{\n\t$0\n}\n"
                                 },
                                 "caption": "Key Bindings"
-                            },
+                            }
                         ]
                     }
                 ]
